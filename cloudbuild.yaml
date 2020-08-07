@@ -1,0 +1,7 @@
+steps:
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['build', '-t', 'gcr.io/$_APP/nmnm-test-project:$COMMIT_SHA', '.']
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['push', 'gcr.io/$_APP/nmnm-test-project:$COMMIT_SHA']
+- name: 'gcr.io/cloud-builders/gcloud'
+  args: ['beta', 'run', 'deploy', 'spring-helloworld-$_APP', '--region=$_REGION', '--platform=managed', '--allow-unauthenticated', '--image=gcr.io/$_APP/nmnm-test-project:$COMMIT_SHA']
