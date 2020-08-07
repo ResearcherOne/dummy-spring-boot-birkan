@@ -1,7 +1,7 @@
 steps:
 - name: 'gcr.io/cloud-builders/docker'
-  args: ['build', '-t', 'gcr.io/$_APP/nmnm-test-project:$COMMIT_SHA', '.']
+  args: ['build', '-t', 'gcr.io/nmnm-test-project/$_RUN_ENV/spring-helloworld:$COMMIT_SHA', '.']
 - name: 'gcr.io/cloud-builders/docker'
-  args: ['push', 'gcr.io/$_APP/nmnm-test-project:$COMMIT_SHA']
+  args: ['push', 'gcr.io/nmnm-test-project/$_RUN_ENV/spring-helloworld:$COMMIT_SHA']
 - name: 'gcr.io/cloud-builders/gcloud'
-  args: ['beta', 'run', 'deploy', 'spring-helloworld-$_APP', '--region=$_REGION', '--platform=managed', '--allow-unauthenticated', '--image=gcr.io/$_APP/nmnm-test-project:$COMMIT_SHA']
+  args: ['beta', 'run', 'deploy', 'spring-helloworld-$_RUN_ENV', '--region=$_REGION', '--platform=managed', '--allow-unauthenticated', '--image=gcr.io/nmnm-test-project/$_RUN_ENV/spring-helloworld:$COMMIT_SHA']
