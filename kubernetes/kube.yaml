@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: hello-spring-boot-v3
+  name: hello-spring-boot-v3
+  namespace: default
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: hello-spring-boot-v3
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: hello-spring-boot-v3
+    spec:
+      containers:
+        - image: >-
+            gcr.io/nmnm-test-project/github.com/researcherone/dummy-spring-boot-birkan
+          imagePullPolicy: IfNotPresent
+          name: helloworld-v3-sha256-1
+---
+apiVersion: autoscaling/v2beta1
+kind: HorizontalPodAutoscaler
+metadata:
+  labels:
+    app: hello-spring-boot-v3
+  name: hello-spring-boot-v3-hpa-lhst
+  namespace: default
+spec:
+  maxReplicas: 5
+  metrics:
+    - resource:
+        name: cpu
+        targetAverageUtilization: 80
+      type: Resource
+  minReplicas: 1
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: hello-spring-boot-v3
